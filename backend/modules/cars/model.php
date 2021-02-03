@@ -22,9 +22,9 @@ class CarsModel extends Model {
     // READ
     public function get_cars(ListCar $list_params) : array {
         $result = $this->db->query(
-            'SELECT * FROM cars WHERE id > ? LIMIT ?',
+            'SELECT * FROM cars ORDER BY id DESC LIMIT ? OFFSET ?',
             'ii',
-            $list_params->after_id, $list_params->limit
+            $list_params->limit, ($list_params->page-1)*$list_params->limit
         );
         // $cars = array();
         // while ($row = $result->query->fetch_assoc()) {

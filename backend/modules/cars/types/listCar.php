@@ -2,18 +2,22 @@
 <?php
 
 class ListCar {
-    public int $page = 0;
+    public int $page = 1;
     public int $limit = 9;
-    public int $after_id = 0;
-    public int $cars_count = 0;
 
-    public function __construct($cars_count) {
-        $this->cars_count = $cars_count;
+    public function __construct() {
     }
     public function validate() : void {
         if ($this->limit > 81) {
             throw new BadReqException('Max limit');
         }
+        if ($this->page < 1) {
+            throw new BadReqException('Invalid page');
+        }
+        if ($this->page > 1000) {
+            throw new BadReqException('Max page');
+        } 
+        
     }
 }
 

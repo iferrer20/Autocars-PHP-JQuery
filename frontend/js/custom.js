@@ -9,9 +9,9 @@ $(function () {
 	let path = location.pathname.substr(1).replace(".html","");
 
 	let tasks = {
-		"" : () => { return [renderBodyElems(), renderCars()] },
-		"index" :  () => { return [renderBodyElems(), renderCars()] },
-		"cars": () => { return [renderBodyElems(), renderCars()] }
+		"" : () => { return [renderBodyElems()] },
+		"index" :  () => { return [renderBodyElems()] },
+		"cars": () => { return [renderBodyElems()] }
 	}
 
 	let promises = tasks[path]();

@@ -342,7 +342,24 @@ a.readmore_bt {
      width: 100%;
      height: 100%;
 }
-
+.loader_carlist {
+     z-index: 4;
+     position: absolute;
+     z-index: 9999999;
+     background: #fff;
+     width: 100%;
+     height: 100%;
+     opacity: 1;
+     transition-property: opacity z-index;
+     transition-delay: 0s 1s;
+     transition-duration: 1s 0s;
+     transition-timing-function: ease-in-out step-end;
+     
+}
+.loader_carlist-fadeout {
+     opacity: 0;
+     z-index: -1;
+}
 .loader {
      height: 100%;
      width: 100%;
@@ -2161,7 +2178,50 @@ ul.location_icon span {
 
 .img-car {
      width: 100%;
-     height: 150px;
+     height: 130px;
      background-position: center;
      background-size: cover;
+}
+#car-list-pagination {
+     width: 100%;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+}
+.car-list-pagination-el {
+     width: 50px;
+     height: 50px;
+     padding: 10px;
+     background-color: #fafafa;
+     box-shadow: 0px 0px 13px 0px rgba(0,0,0,0.75);
+     color: black;
+     font-weight: bold;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     font-size: 20pt;
+     font-family: Verdana, Geneva, Tahoma, sans-serif;
+     cursor: pointer;
+     border-radius: 10px;
+     margin: 10px;
+     -webkit-user-select: none;
+     -moz-user-select: none;
+}
+.car-list-pagination-el-selected {
+     background-color: #000000;
+     color: white;
+}
+#car-list {
+     position: relative;
+     display: flex;
+     justify-content: center;
+     min-height: 900px;
+     max-height: 900px;
+}
+.car-el {
+     margin: 10px;
+     width: 300px;
+}
+.car-update {
+     
 }

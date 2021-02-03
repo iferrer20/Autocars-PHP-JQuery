@@ -23,15 +23,22 @@ class CarsController extends Controller {
         res($this->model->get_cars());
     }
     public function list_post() {
-        $car_count = $this->model->get_car_count();
-        $list = new ListCar($car_count);
-
+        
+        $list = new ListCar();
         array_to_obj(Client::$data, $list);
         $list->validate();
 
         $cars = $this->model->get_cars($list);
 
-        res(array("cars" => $cars));
+        $car_count = $this->model->get_car_count();
+        $pages = $car_count/$list->limit;
+        $pages += is_float($pages) ? 1 : 0;
+        $pages = intval($pages);
+
+        res(array(
+            "cars" => $cars,
+            "pages" => $pages
+        ));
         
     }
     public function read_get() {
