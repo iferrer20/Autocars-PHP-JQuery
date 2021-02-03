@@ -2219,9 +2219,85 @@ ul.location_icon span {
      max-height: 900px;
 }
 .car-el {
+     -moz-user-select: none;
+     -webkit-user-select: none;
      margin: 10px;
+     cursor: pointer;
      width: 300px;
 }
 .car-update {
      
+}
+#car-modal-shadow {
+     top: 0;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     background-color: #00000094;
+     position: fixed;
+     z-index: 9;
+     transition-property: opacity z-index;
+     transition-duration: 0.5s 0.5s;
+     /* transition-delay: 0s 1s; */
+     transition-timing-function: ease-in-out step-end;
+}
+#car-modal-shadow.car-modal-shadow-hidden {
+     opacity: 0;
+     z-index: -1;
+}
+
+#car-modal {
+     width: 1000px;
+     height: 900px;
+     background-color: white;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%,-50%);
+     border-radius: 10px;
+     position: fixed;
+     z-index: 10;
+     transition: transform 0.5s ease-in-out;
+     display: flex;
+     flex-direction: column;
+     box-sizing: content-box;
+     padding: 20px;
+
+}
+#car-modal.car-modal-hidden {
+     transform: translate(-50%, 60%);
+}
+#car-modal-close {
+     margin-left: auto;
+     -moz-user-select: none;
+     -webkit-user-select: none;
+     font-weight: bold;
+     width: 40px;
+     height: 40px;
+     border-radius: 50%;
+     background-color: white;
+     transition: background-color 0.2s ease-in-out;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     font-size: 15pt;
+}
+#car-modal-close:hover {
+     background-color: rgb(216, 216, 216);
+     cursor: pointer;
+}
+#car-modal-img {
+     width: 300px;
+     height: 150px;
+     align-self: center;
+     border-radius: 10px;
+}
+#car-model-submit {
+     outline: none;
+     background-color: #0081eb;
+     color: white;
+     width: 200px;
+     border-radius: 20px;
+     font-weight: bold;
+     padding: 5px;
+     align-self: center;
 }

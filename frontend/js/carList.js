@@ -1,7 +1,7 @@
 "use strict";
 
 var toggled_loader = false;
-async function getCars(page=0, categories=[]) {
+async function getCars(page=1, categories=[]) {
 	let resp = await req("POST", "/api/cars/list/", {
 		"page": page,
 	});
@@ -56,8 +56,13 @@ function addCar(car) {
 				<i><img src="images/star.png"/></i>
 				<i><img src="images/star.png"/></i>
 			</div>
-		</div>
-		`);
+        </div>`);
+    
+    var car_el = list_el.children().first();
+    car_el.click(function() {
+        onClickCar.call(this, car);
+    });
+
 }
 function clearCars() {
     $("#car-list .car-el").remove();
@@ -77,6 +82,9 @@ async function onPagination() {
     clearCars();
     addCars((await getCars(page)).cars);
     toggleLoader();
+}
+function onClickCar(car) {
+    openCarModal(car);
 }
 
 function createPagination(pages) {

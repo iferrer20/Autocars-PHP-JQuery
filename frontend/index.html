@@ -17,6 +17,7 @@
     <script src="js/bodyElems.js"></script>
     <script src="js/cars.js"></script>
     <script src="js/carList.js"></script>
+    <script src="js/carModal.js"></script>
 
     <script src="js/jquery.min.js"></script>
     <script src="js/popper.min.js"></script>
@@ -248,6 +249,18 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div id="car-modal-shadow" class="car-modal-shadow-hidden"></div>
+    <div id="car-modal" class="car-modal-hidden" nohtml-elem-key="car-modal">
+        <div id="car-modal-close">
+            x
+        </div>
+        <div class="img-car" id="car-modal-img"></div>
+        <input type="text" id="car-modal-name" name="name">
+        <input type="text" id="car-modal-description" name="description">
+        <input type="number" id="car-modal-price" name="price">
+        <div id="car-model-image"></div>
+        <button id="car-model-submit">Submit</button>
     </div>
     <!-- end clients -->
     <!-- contact -->

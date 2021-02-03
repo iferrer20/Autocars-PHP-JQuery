@@ -1,11 +1,11 @@
 "use strict";
 
-const getElem = async function(el) { // Returns header html
+async function getElem(el) { // Returns header html
     var headerhtml = await req("GET", "/elem/" + el + ".html", null, false);
     return headerhtml;
 }
 
-const renderBodyElems = async function() {
+async function renderBodyElems() {
     $('[elem-key], [nohtml-elem-key]').each(async function() {
         let key_val = $(this).attr('elem-key');
         let nohtml_key_val = $(this).attr('nohtml-elem-key');
@@ -30,8 +30,5 @@ const renderBodyElems = async function() {
         }
         // car-list to CreateCarList
         
-    });
-    $('').each(function() {
-        let key = $(this).attr('nohtml-elem-key');
     });
 }

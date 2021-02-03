@@ -1,5 +1,4 @@
 const req = async function(method, url, data=null, json=true) {
-	
 	const response = await fetch(url, {
 		method: method, // *GET, POST, PUT, DELETE, etc.
 		mode: 'same-origin', // no-cors, *cors, same-origin
