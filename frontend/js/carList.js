@@ -28,41 +28,54 @@ async function constructCarList() {
     toggleLoader();
     
 }
+
 function addCars(cars) {
     $.each(cars, (key, car) => {
         addCar(car);
     });
 }
-function updateCar(carId) {
+function updateCar(car) {
+    let name_el = $(`#car-list [car-id=${car.id}] .car-list-name`);
+    let price_el = $(`#car-list [car-id=${car.id}] .car-list-price`);
 
-}
-
-function delItem() {
+    name_el.html(car.name);
+    price_el.html(car.price);
     
 }
+function onClickUpdate(car) {
+    openCarModal(car);
+}
+async function onClickDelete(car) {
+    if (await userDeleteConfirmation()) {
+
+    }
+}
+
 function addCar(car) {
     let list_el = $("#car-list");
     list_el.prepend(`
 		<div class="car-el" car-id="${car.id}">
 			<div class="brand_box">
 				<div class="img-car" style="background-image: url('images/cars/${car.id}.jpg')" alt="img" />
-				<h3><strong class="red">${formatInteger(car.price)} €</strong></h3>
-                <span>${car.name}</span>
-                <div class="car-update"></div>
-                <div class="car-delete"></div>
-                <div class="car-read"></div>
-				<i><img src="images/star.png"/></i>
-				<i><img src="images/star.png"/></i>
-				<i><img src="images/star.png"/></i>
-				<i><img src="images/star.png"/></i>
+				<h3><strong class="red car-list-price">${formatInteger(car.price)}</strong></h3>
+                <span class="car-list-name">${car.name}</span>
+                <div class="car-crud-buttons">
+                    <div class="car-crud-button car-update">U</div>
+                    <div class="car-crud-button car-delete">D</div>
+                    <div class="car-crud-button car-read">R</div>
+                </div>
+				
 			</div>
         </div>`);
-    
-    var car_el = list_el.children().first();
-    car_el.click(function() {
-        onClickCar.call(this, car);
-    });
+    /*<i><img src="images/star.png"/></i>
+				<i><img src="images/star.png"/></i>
+				<i><img src="images/star.png"/></i>
+				<i><img src="images/star.png"/></i>*/
 
+    // Set Callbacks
+    $(`#car-list [car-id=${car.id}]`).click(() => onClickCar(car));
+    $(`#car-list [car-id=${car.id}] .car-update`).click(() => onClickUpdate(car));
+    $(`#car-list [car-id=${car.id}] .car-delete`).click(() => onClickDelete(car));
 }
 function clearCars() {
     $("#car-list .car-el").remove();
@@ -84,9 +97,8 @@ async function onPagination() {
     toggleLoader();
 }
 function onClickCar(car) {
-    openCarModal(car);
+    //openCarModal(car);
 }
-
 function createPagination(pages) {
     var pagination = $("#car-list-pagination");
     pagination.html('');

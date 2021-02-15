@@ -24,7 +24,7 @@ server {
 
 	location / {
 		root /var/www/frontend/;
-		try_files $uri /$uri/ =404;
+		try_files /app.html =404;
 	}
 	location /phpmyadmin/ {
 		try_files $uri $uri/ =404;
@@ -57,6 +57,7 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/iferrer.ddns.net/privkey.pem; # managed by Certbot
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
 
 }
 server {

@@ -72,7 +72,7 @@ class CarsController extends Controller {
     }
     public function update_post() {
         $car = new Car();
-        array_to_obj($_POST, $car, true);
+        array_to_obj(Client::$data, $car, true);
 
         $car->validate();
         $this->model->update_car($car);

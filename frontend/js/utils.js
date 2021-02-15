@@ -1,4 +1,4 @@
-const req = async function(method, url, data=null, json=true) {
+async function req(method, url, data=null, json=true) {
 	const response = await fetch(url, {
 		method: method, // *GET, POST, PUT, DELETE, etc.
 		mode: 'same-origin', // no-cors, *cors, same-origin
@@ -9,7 +9,26 @@ const req = async function(method, url, data=null, json=true) {
 		referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
 		body: data ? JSON.stringify(data) : data // body data type must match "Content-Type" header
 	});
-	return await json ? response.json() : response.text(); 
+	let response_data = await (json ? response.json() : response.text());
+
+	switch (response.status) {
+		case 200:
+			return response_data;
+			break;
+		case 400:
+			throw response_data.error;
+			break;
+		case 500:
+			throw 'Server error';
+			break;
+		default:
+			break;
+	}
+	
+}
+
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function formatInteger(num) {

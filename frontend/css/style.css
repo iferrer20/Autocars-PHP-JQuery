@@ -1867,7 +1867,10 @@ border-radius: 50px;
      margin-bottom: 30px;
 }
 
-
+.brand_box {
+     display: flex;
+     flex-direction: column;
+}
 .brand-bg .brand_box {
      background: #fff;
      text-align: center;
@@ -2216,7 +2219,7 @@ ul.location_icon span {
      display: flex;
      justify-content: center;
      min-height: 900px;
-     max-height: 900px;
+     max-height: 15000px;
 }
 .car-el {
      -moz-user-select: none;
@@ -2236,19 +2239,17 @@ ul.location_icon span {
      background-color: #00000094;
      position: fixed;
      z-index: 9;
-     transition-property: opacity z-index;
-     transition-duration: 0.5s 0.5s;
-     /* transition-delay: 0s 1s; */
-     transition-timing-function: ease-in-out step-end;
+     transition-property: opacity;
+     transition-duration: 0.5s;
+     transition-timing-function: ease-in-out, step-end;
 }
 #car-modal-shadow.car-modal-shadow-hidden {
      opacity: 0;
-     z-index: -1;
 }
 
 #car-modal {
      width: 1000px;
-     height: 900px;
+     height: 90%;
      background-color: white;
      top: 50%;
      left: 50%;
@@ -2261,7 +2262,9 @@ ul.location_icon span {
      flex-direction: column;
      box-sizing: content-box;
      padding: 20px;
-
+}
+#car-modal input {
+     margin: 10px;
 }
 #car-modal.car-modal-hidden {
      transform: translate(-50%, 60%);
@@ -2300,4 +2303,49 @@ ul.location_icon span {
      font-weight: bold;
      padding: 5px;
      align-self: center;
+     margin-top: auto;
+}
+#car-model-submit.car-model-submit-loading {
+     background-color: #c5c5c5;
+     cursor: unset;
+}
+#car-model-submit.car-model-submit-error {
+     background-color: red;
+     cursor: unset;
+}
+#car-model-submit.car-model-submit-saved {
+     background-color: #6fff5c;
+     cursor: unset;
+}
+.car-list-price {
+     color: #17eb4c;
+     font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.car-list-price::after {
+     content: " €";
+}
+.car-crud-buttons {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+}
+.car-crud-button {
+     color: white;
+     margin: 5px;
+     width: 50px;
+     padding: 5px;
+     align-self: center;
+     font-size: 14pt;
+     font-weight: bold;
+     font-family: Verdana, Geneva, Tahoma, sans-serif;
+     border-radius: 10px;
+}
+.car-update {
+     background-color: #00eeff;
+}
+.car-read {
+     background-color: #00ff6a;
+}
+.car-delete {
+     background-color: #ff0000;
 }
