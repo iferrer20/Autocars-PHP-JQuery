@@ -26,7 +26,6 @@ async function constructCarList() {
     addCars(cars);
     createPagination(npages);
     toggleLoader();
-    
 }
 
 function addCars(cars) {

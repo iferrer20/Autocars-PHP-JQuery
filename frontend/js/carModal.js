@@ -3,7 +3,7 @@
 var toggled_car_modal = false;
 var submitting = false;
 
-function updateCarFromModal(car) {
+function parseCarFromModal(car) {
     $.each(car, (key, val) => { 
         let el = $(`#car-modal-${key}`);
         switch (el.attr("type")) {
@@ -27,7 +27,7 @@ async function openCarModal(car) {
         
         $("#car-modal-img").css("background-image", `url(images/cars/${car.id}.jpg)`);
         $("#car-model-submit").click(function() {
-            updateCarFromModal(car);
+            parseCarFromModal(car);
             submitCar(car);
         });
 
@@ -68,8 +68,6 @@ async function submitCar(car) {
         submitButton.html('Submit');
         submitting = false;
     }
-    
-    
 }
 async function closeCarModal() {
     if (toggled_car_modal) {

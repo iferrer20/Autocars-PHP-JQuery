@@ -22,10 +22,12 @@ server {
 	index index.html index.htm index.nginx-debian.html index.php;
         server_name iferrer.ddns.net; # managed by Certbot	
 
+	
 	location / {
-		root /var/www/frontend/;
-		try_files /app.html =404;
+		root /var/www/frontend/src/;
+		try_files $uri /app.html =404;
 	}
+
 	location /phpmyadmin/ {
 		try_files $uri $uri/ =404;
 	}

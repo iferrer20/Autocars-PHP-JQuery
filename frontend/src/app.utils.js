@@ -1,3 +1,5 @@
+"use strict";
+
 async function req(method, url, data=null, json=true) {
 	const response = await fetch(url, {
 		method: method, // *GET, POST, PUT, DELETE, etc.
@@ -25,26 +27,6 @@ async function req(method, url, data=null, json=true) {
 			break;
 	}
 	
-}
-function loadScript(url, callback){
-    let script = document.createElement("script")
-    script.type = "text/javascript";
-
-    if (script.readyState){  //IE
-        script.onreadystatechange = function() {
-            if (script.readyState == "loaded" || script.readyState == "complete") {
-                script.onreadystatechange = null;
-                callback();
-            }
-        };
-    } else {  //Others
-        script.onload = function() {
-            callback();
-        };
-    }
-
-    script.src = url;
-    document.getElementsByTagName("head")[0].appendChild(script);
 }
 
 function sleep(ms) {
