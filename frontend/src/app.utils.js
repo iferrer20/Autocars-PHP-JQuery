@@ -1,6 +1,6 @@
 "use strict";
 
-async function req(method, url, data=null, json=true) {
+const req = async function(method, url, data=null, json=true) {
 	const response = await fetch(url, {
 		method: method, // *GET, POST, PUT, DELETE, etc.
 		mode: 'same-origin', // no-cors, *cors, same-origin
@@ -29,10 +29,28 @@ async function req(method, url, data=null, json=true) {
 	
 }
 
-function sleep(ms) {
+const loadSource = async function(el) {
+    return new Promise((resolve, reject) => {
+        if (el.readyState) {  //IE
+            el.onreadystatechange = function() {
+                if (el.readyState == "loaded" || el.readyState == "complete") {
+                    el.onreadystatechange = null;
+                    resolve();
+                }
+            };
+        } else {  //Others
+            el.onload = function() {
+                resolve();
+            };
+        }
+        document.getElementsByTagName("head")[0].appendChild(el);
+    });
+}
+
+const sleep = function(ms) {
 	return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function formatInteger(num) {
+const formatInteger = function (num) {
 	return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
 }

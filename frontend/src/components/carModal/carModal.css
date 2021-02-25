@@ -1,0 +1,86 @@
+#car-modal-shadow {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #00000094;
+    position: fixed;
+    z-index: 9;
+    transition-property: opacity;
+    transition-duration: 0.5s;
+    transition-timing-function: ease-in-out, step-end;
+}
+#car-modal-shadow.car-modal-shadow-hidden {
+    opacity: 0;
+}
+
+#car-modal {
+    width: 1000px;
+    height: 90%;
+    background-color: white;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    border-radius: 10px;
+    position: fixed;
+    z-index: 10;
+    transition: transform 0.5s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    box-sizing: content-box;
+    padding: 20px;
+}
+#car-modal input {
+    margin: 10px;
+}
+#car-modal.car-modal-hidden {
+    transform: translate(-50%, 60%);
+}
+#car-modal-close {
+    margin-left: auto;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    font-weight: bold;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: white;
+    transition: background-color 0.2s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15pt;
+}
+#car-modal-close:hover {
+    background-color: rgb(216, 216, 216);
+    cursor: pointer;
+}
+#car-modal-img {
+    width: 300px;
+    height: 150px;
+    align-self: center;
+    border-radius: 10px;
+}
+#car-modal-submit {
+    outline: none;
+    background-color: #0081eb;
+    color: white;
+    width: 200px;
+    border-radius: 20px;
+    font-weight: bold;
+    padding: 5px;
+    align-self: center;
+    margin-top: auto;
+}
+#car-modal-submit.car-modal-submit-loading {
+    background-color: #c5c5c5;
+    cursor: unset;
+}
+#car-modal-submit.car-modal-submit-error {
+    background-color: red;
+    cursor: unset;
+}
+#car-modal-submit.car-modal-submit-saved {
+    background-color: #6fff5c;
+    cursor: unset;
+}
