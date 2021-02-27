@@ -24,7 +24,7 @@ server {
 
 	
 	location / {
-		root /var/www/frontend/src/;
+		root /var/www/frontend/;
 		try_files $uri /app.html =404;
 	}
 

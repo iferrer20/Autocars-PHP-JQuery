@@ -24,7 +24,7 @@ class CarsController extends Controller {
     }
     public function list_post() {
         
-        $list = new ListCar();
+        $list = new CarList();
         array_to_obj(Client::$data, $list);
         $list->validate();
 
@@ -38,6 +38,20 @@ class CarsController extends Controller {
         res(array(
             "cars" => $cars,
             "pages" => $pages
+        ));
+        
+    }
+    public function search_post() {
+        
+        $search = new CarSearch();
+        array_to_obj(Client::$data, $search);
+        $search->validate();
+
+        $cars = $this->model->search_car($search);
+        $car_count = count($cars);
+
+        res(array(
+            "cars" => $cars
         ));
         
     }

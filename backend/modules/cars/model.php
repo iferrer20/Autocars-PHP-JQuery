@@ -20,7 +20,7 @@ class CarsModel extends Model {
     
     }
     // READ
-    public function get_cars(ListCar $list_params) : array {
+    public function get_cars(CarList $list_params) : array {
         $result = $this->db->query(
             'SELECT * FROM cars ORDER BY id DESC LIMIT ? OFFSET ?',
             'ii',
@@ -52,6 +52,16 @@ class CarsModel extends Model {
         
         
     } 
+    public function search_car(CarSearch $search) {
+        $result = $this->db->query(
+            'SELECT * FROM cars WHERE name LIKE CONCAT("%", ?, "%") OR description LIKE CONCAT("%", ?, "%")',
+            'ss',
+            $search->text,
+            $search->text
+        );
+
+        return $result->query->fetch_all(MYSQLI_ASSOC);
+    }
     // UPDATE
     public function update_car(Car $car) {
         $result = $this->db->query(
