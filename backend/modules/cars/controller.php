@@ -48,10 +48,14 @@ class CarsController extends Controller {
         $search->validate();
 
         $cars = $this->model->search_car($search);
-        $car_count = count($cars);
+        $car_count = $this->model->search_car_count($search);
+        $pages = $car_count/$search->limit;
+        $pages += is_float($pages) ? 1 : 0;
+        $pages = intval($pages);
 
         res(array(
-            "cars" => $cars
+            "cars" => $cars,
+            "pages" => $pages
         ));
         
     }

@@ -53,15 +53,41 @@ class CarsModel extends Model {
         
     } 
     public function search_car(CarSearch $search) {
+        $categories = "category";
+        if (!empty($search->categories)) {
+            $categories = '\'' . join('\', \'', array_map("addslashes", $search->categories)) . '\'';
+        }
+
         $result = $this->db->query(
-            'SELECT * FROM cars WHERE name LIKE CONCAT("%", ?, "%") OR description LIKE CONCAT("%", ?, "%")',
-            'ss',
-            $search->text,
-            $search->text
+            "SELECT cars.id, description, cars.name, b.brand, km, price, at, cat.category FROM cars LEFT JOIN brands b ON b.id = cars.id LEFT JOIN car_category cc ON cars.id = cc.car_id LEFT JOIN categories cat ON cc.category_id = cat.id WHERE category IN ($categories) AND price BETWEEN ? AND ? AND km BETWEEN ? AND ? AND at > '1990-01-01 00:00:00' AND b.brand LIKE ? AND (cars.name LIKE CONCAT('%', ?, '%') OR cars.description LIKE CONCAT('%', ?, '%')) LIMIT ? OFFSET ?",
+            'iiiisssii',
+            $search->min_price, $search->max_price,
+            $search->min_km, $search->max_km,
+            $search->brand,
+            $search->text, $search->text,
+            $search->limit, ($search->page-1)*$search->limit
         );
 
         return $result->query->fetch_all(MYSQLI_ASSOC);
     }
+    public function search_car_count(CarSearch $search) {
+        $categories = "category";
+        if (!empty($search->categories)) {
+            $categories = '\'' . join('\', \'', array_map("addslashes", $search->categories)) . '\'';
+        }
+
+        $result = $this->db->query(
+            "SELECT COUNT(cars.id) as car_count FROM cars LEFT JOIN brands b ON b.id = cars.id LEFT JOIN car_category cc ON cars.id = cc.car_id LEFT JOIN categories cat ON cc.category_id = cat.id WHERE category IN ($categories) AND price BETWEEN ? AND ? AND km BETWEEN ? AND ? AND at > '1990-01-01 00:00:00' AND b.brand LIKE ? AND (cars.name LIKE CONCAT('%', ?, '%') OR cars.description LIKE CONCAT('%', ?, '%'))",
+            'iiiisss',
+            $search->min_price, $search->max_price,
+            $search->min_km, $search->max_km,
+            $search->brand,
+            $search->text, $search->text
+        );
+
+        return $result->query->fetch_all(MYSQLI_ASSOC)[0]["car_count"];
+    }
+
     // UPDATE
     public function update_car(Car $car) {
         $result = $this->db->query(
