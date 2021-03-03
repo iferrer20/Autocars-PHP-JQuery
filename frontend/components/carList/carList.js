@@ -87,6 +87,7 @@ class CarList {
                             <div class="car-el-info-name">${car.name}</div>
                             <div class="car-el-info-price">${formatInteger(car.price)} €</div>
                             <div class="car-el-info-description">${car.description}</div>
+                            <div class="car-el-info-km">KM: ${car.km}</div>
                         </div>
                     </div>
                 </div>`);

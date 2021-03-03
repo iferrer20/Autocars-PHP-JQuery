@@ -67,10 +67,10 @@ class CarsModel extends Model {
         switch ($order) {
             default:
             case 'recent':
-                $order = 'ORDER BY cars.at ASC';
+                $order = 'ORDER BY cars.at DESC';
                 break;
             case 'old':
-                $order = 'ORDER BY cars.at DESC';
+                $order = 'ORDER BY cars.at ASC';
                 break;
             case 'expensive':
                 $order = 'ORDER BY price DESC';
@@ -80,6 +80,12 @@ class CarsModel extends Model {
                 break;
             case 'popular':
                 $order = 'ORDER BY views DESC';
+                break;
+            case 'lesskm':
+                $order = 'ORDER BY km ASC';
+                break;
+            case 'morekm':
+                $order = 'ORDER BY km DESC';
                 break;
         }
         return $order;
@@ -118,16 +124,44 @@ class CarsModel extends Model {
         $published = $this->get_published_sql($search->published);
 
         $result = $this->db->query(
-            "SELECT cars.id, description, cars.name, b.brand, km, price, at, cat.category FROM cars LEFT JOIN brands b ON b.id = cars.id LEFT JOIN car_category cc ON cars.id = cc.car_id LEFT JOIN categories cat ON cc.category_id = cat.id WHERE category IN ($categories) AND price BETWEEN ? AND ? AND km BETWEEN ? AND ? AND b.brand LIKE ? AND (cars.name LIKE CONCAT('%', ?, '%') OR cars.description LIKE CONCAT('%', ?, '%')) AND at >= $published $order LIMIT ? OFFSET ?",
-            'iiiisssii',
+            "SELECT cars.id, description, cars.name, b.brand, km, price, at, cat.category FROM cars LEFT JOIN brands b ON b.id = cars.id LEFT JOIN car_category cc ON cars.id = cc.car_id LEFT JOIN categories cat ON cc.category_id = cat.id WHERE category IN ($categories) AND price BETWEEN ? AND ? AND km BETWEEN ? AND ? AND b.brand LIKE ? AND (cars.name LIKE CONCAT('%', ?, '%') OR cars.description LIKE CONCAT('%', ?, '%')) AND at >= $published $order",
+            'iiiisss',
             $search->min_price, $search->max_price,
             $search->min_km, $search->max_km,
             $search->brand,
             $search->text, $search->text,
-            $search->limit, ($search->page-1)*$search->limit
         );
 
-        return $result->query->fetch_all(MYSQLI_ASSOC);
+        //$search->limit, ($search->page-1)*$search->limit
+        $result = $result->query->fetch_all(MYSQLI_ASSOC);
+        $count = count($result);
+        $result_arr = array();
+        
+        for ($i=(($search->page-1)*$search->limit);$i<$count;$i++) {
+            if ($i >= ((($search->page-1)*$search->limit) + ($search->limit))) {
+                break;
+            }
+            
+            $row = $result[$i];
+            array_push($result_arr, $row);
+        }
+        return $result_arr;
+
+        // $categories = $this->get_category_sql($search->categories);
+        // $order = $this->get_order_sql($search->order);
+        // $published = $this->get_published_sql($search->published);
+
+        // $result = $this->db->query(
+        //     "SELECT cars.id, description, cars.name, b.brand, km, price, at, cat.category FROM cars LEFT JOIN brands b ON b.id = cars.id LEFT JOIN car_category cc ON cars.id = cc.car_id LEFT JOIN categories cat ON cc.category_id = cat.id WHERE category IN ($categories) AND price BETWEEN ? AND ? AND km BETWEEN ? AND ? AND b.brand LIKE ? AND (cars.name LIKE CONCAT('%', ?, '%') OR cars.description LIKE CONCAT('%', ?, '%')) AND at >= $published $order LIMIT ? OFFSET ?",
+        //     'iiiisssii',
+        //     $search->min_price, $search->max_price,
+        //     $search->min_km, $search->max_km,
+        //     $search->brand,
+        //     $search->text, $search->text,
+        //     $search->limit, ($search->page-1)*$search->limit
+        // );
+
+        // return $result->query->fetch_all(MYSQLI_ASSOC);
     }
     
     public function search_car_count(CarSearch $search) {

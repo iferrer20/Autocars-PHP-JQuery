@@ -3,7 +3,7 @@
 class CarSlider {
     async run() {
         for(;;) {
-            await sleep(5000);
+            await sleep(3000);
             if (!this.usermoved) {
                 this.slider.css('transform', `translateX(-${this.transform}%)`);
                 this.transform += 100/this.npages;

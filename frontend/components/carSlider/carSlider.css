@@ -21,7 +21,8 @@ div[comp-key="carSlider"] {
 }
 .car-slider-el {
     background-position: center;
-    background-size: contain;
+    background-size: cover;
+    background-repeat: no-repeat;
     width: 200px;
     height: 100px;
     cursor: pointer;
