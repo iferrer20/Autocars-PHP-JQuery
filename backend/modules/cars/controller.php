@@ -81,11 +81,11 @@ class CarsController extends Controller {
         save_image('img', 'public/img/cars/' . $id . '.jpg');
     }
     public function delete_post() {
-        $car_id = $_POST['id'];
+        $car_id = Client::$data["id"];
         $car = $this->model->get_car($car_id);
         if ($car) {
-            $this->model->delete_car($car->id);
-            remove_file('../frontend/img/cars/' . $car->id . '.jpg');
+            $this->model->delete_car($car["id"]);
+            remove_file('../frontend/img/cars/' . $car["id"] . '.jpg');
         } else {
             notfound('The car ' . $car_id);
         }
@@ -93,7 +93,7 @@ class CarsController extends Controller {
     }
     public function update_post() {
         $car = new Car();
-        array_to_obj(Client::$data, $car, true);
+        array_to_obj(Client::$data, $car);
 
         $car->validate();
         $this->model->update_car($car);

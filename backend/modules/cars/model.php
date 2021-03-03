@@ -121,7 +121,7 @@ class CarsModel extends Model {
         $categories = $this->get_category_sql($search->categories);
         $published = $this->get_published_sql($search->published);
         $result = $this->db->query(
-            "SELECT COUNT(cars.id) as car_count FROM cars LEFT JOIN brands b ON b.id = cars.id LEFT JOIN car_category cc ON cars.id = cc.car_id LEFT JOIN categories cat ON cc.category_id = cat.id WHERE category IN ($categories) AND price BETWEEN ? AND ? AND km BETWEEN ? AND ? AND at > '1990-01-01 00:00:00' AND b.brand LIKE ? AND (cars.name LIKE CONCAT('%', ?, '%') OR cars.description LIKE CONCAT('%', ?, '%'))",
+            "SELECT COUNT(cars.id) as car_count FROM cars LEFT JOIN brands b ON b.id = cars.id LEFT JOIN car_category cc ON cars.id = cc.car_id LEFT JOIN categories cat ON cc.category_id = cat.id WHERE category IN ($categories) AND price BETWEEN ? AND ? AND km BETWEEN ? AND ? AND at > '1990-01-01 00:00:00' AND b.brand LIKE ? AND (cars.name LIKE CONCAT('%', ?, '%') OR cars.description LIKE CONCAT('%', ?, '%')) AND at >= $published",
             'iiiisss',
             $search->min_price, $search->max_price,
             $search->min_km, $search->max_km,
@@ -148,9 +148,9 @@ class CarsModel extends Model {
     // UPDATE
     public function update_car(Car $car) {
         $result = $this->db->query(
-            'UPDATE cars SET name=?, description=?, price=? WHERE id=?',
-            'ssii',
-            $car->name, $car->description, $car->price, $car->id
+            'UPDATE cars SET name=?, description=?, price=?, km=?, at=? WHERE id=?',
+            'ssiisi',
+            $car->name, $car->description, $car->price, $car->km, $car->at, $car->id
         );
     }
     // DELETE

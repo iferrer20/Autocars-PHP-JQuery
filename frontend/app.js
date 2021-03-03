@@ -114,7 +114,9 @@ App.routing = {
             "header",
             "footer",
             "carModal",
-            "categories"
+            "categories",
+            "sliderImages",
+            "carSlider"
         ]
     },
     "shop" : {
@@ -143,7 +145,8 @@ App.routing = {
         "components" : [
             "header",
             "footer",
-            "carDetails"
+            "carDetails",
+            "bookList"
         ]
     }
 }

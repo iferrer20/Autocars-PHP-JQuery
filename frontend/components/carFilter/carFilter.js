@@ -7,7 +7,7 @@ class CarFilter {
         App.setArg("page", carList.page);
         App.setArg("filters", b64encodeJson(this.filters));
         await carList.searchCar();
-        carList.createPagination();
+        //carList.createPagination();
     }
     updateUrl() {
         App.setArg();

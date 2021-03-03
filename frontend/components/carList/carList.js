@@ -30,6 +30,9 @@ class CarList {
         //addCars((await getCars(page)).cars);
         this.toggleLoader();
     }
+    updateCar(car) {
+        this.renderCars();
+    }
 
     createPagination() {
         let pagination = $(".car-list-pagination");
@@ -46,10 +49,28 @@ class CarList {
             self.onPagination($(this));
         });
     }
-
+    async deleteCar(car_id) {
+        await req("POST", "/api/cars/delete", {
+            'id':car_id
+        });
+        console.log(this.cars.length);
+        if (this.cars.length == 0 && this.page > 1) {
+            this.page--;
+        }
+        this.searchCar();
+    }
+    onDeleteButton(car_el) {
+        let car_id = parseInt(car_el.attr("car-id"));
+        this.deleteCar(car_id);
+    }
+    onUpdateButton(car_el) {
+        let car_id = parseInt(car_el.attr("car-id"));
+        let car = this.cars_indexed[car_id];
+        this.parent.components.carModal.instance.open(car);
+    }
     renderCars() {
+        let self = this;
         this.clearCars();
-
         let list_el = $(".car-list");
 
         this.cars.forEach((car) => {
@@ -58,8 +79,8 @@ class CarList {
                     <div>
                         <div class="car-el-options"><i class="gg-more-vertical-alt"></i></div>
                         <div class="car-el-option-menu">
-                            <div class="car-el-option-el">Update</div>
-                            <div class="car-el-option-el">Delete</div>
+                            <div class="car-el-option-el" value="update">Update</div>
+                            <div class="car-el-option-el" value="delete">Delete</div>
                         </div>
                         <div class="img-car" style="background-image: url('/img/cars/${car.id}.jpg');"></div>
                         <div class="car-el-info">
@@ -69,6 +90,8 @@ class CarList {
                         </div>
                     </div>
                 </div>`);
+                this.cars_indexed[car.id] = car;
+                this.cars_indexed[car.id].el = list_el.children().last();
         });
 
         $(".car-el > div").click(function(e) {
@@ -77,6 +100,14 @@ class CarList {
                 App.href(`/car/${car_id}/`);
             } else {
                 $(this).find(".car-el-option-menu").toggleClass("car-el-option-menu-opened");
+            }
+            if (e.target.className == "car-el-option-el") {
+                let option = $(e.target).attr("value");
+                if (option == "delete") {
+                    self.onDeleteButton($(this).parent());
+                } else if (option == "update") {
+                    self.onUpdateButton($(this).parent());
+                }
             }
         });
         
@@ -100,7 +131,7 @@ class CarList {
         if (this.toggled_loader) {
             this.toggleLoader();
         }
-        
+        this.createPagination();
     }
 
     constructor() {
@@ -109,12 +140,12 @@ class CarList {
             this.page = App.args.page;
         } 
         this.toggled_loader = false;
+        this.cars = [];
+        this.cars_indexed = {};
         
         let self = this;
         this.carFilter = this.parent.components.carFilter.instance;
-        this.searchCar(this.carFilter.filters).then(function() {
-            self.createPagination();
-        });
+        this.searchCar(this.carFilter.filters);
         
     }
 }

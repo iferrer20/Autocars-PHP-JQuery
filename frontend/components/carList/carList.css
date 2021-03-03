@@ -207,3 +207,20 @@ div[comp-key="carList"] {
 .car-el-option-el:hover {
     background-color: #c8c8c8;
 }
+.car-create {
+    align-self: flex-start;
+    margin: 20px;
+    color: rgb(94, 153, 66);
+    transform: scale(2);
+    transition: background-color, 0.3s;
+    cursor: pointer;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.car-create:hover {
+    background-color: #dadada;
+}

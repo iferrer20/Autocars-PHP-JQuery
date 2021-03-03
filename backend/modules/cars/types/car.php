@@ -5,6 +5,10 @@ class Car {
     public int $price = 1000;
     public string $name = '';
     public string $description = '';
+    public string $brand;
+    public string $category;
+    public int $km;
+    public string $at;
 
     public function __construct () {
     }

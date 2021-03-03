@@ -7,14 +7,17 @@ class CarModal { //
         this.current_car = {};
         let self = this;
         
-        $("#car-modal-close").click(close);
+        $("#car-modal-close").click(function() { 
+            self.close();
+        });
     }
     async close() {
-        if (toggled_car_modal) {
+        console.log(this.toggled_car_modal);
+        if (this.toggled_car_modal) {
             
             $("#car-modal-submit").off(); // Clear callbacks submit button
             
-            toggled_car_modal = false;
+            this.toggled_car_modal = false;
     
             $("#car-modal-shadow").addClass("car-modal-shadow-hidden");
             $("#car-modal").addClass("car-modal-hidden");
@@ -40,13 +43,14 @@ class CarModal { //
         });
     }
     async open(car) {
-        if (!toggled_car_modal) {
+        let self = this;
+        if (!this.toggled_car_modal) {
             this.current_car = car;
             $.each(car, (key, val) => $(`#car-modal-${key}`).val(val));
             
-            $("#car-modal-img").css("background-image", `url(images/cars/${car.id}.jpg)`);
+            $("#car-modal-img").css("background-image", `url(img/cars/${car.id}.jpg)`);
             $("#car-modal-submit").click(function() {
-                submitCar();
+                self.submitCar();
             });
     
             $("#car-modal-shadow").css('display', 'block'); // Display Shadow
@@ -55,15 +59,16 @@ class CarModal { //
             $("#car-modal-shadow").removeClass("car-modal-shadow-hidden");
             $("#car-modal").removeClass("car-modal-hidden"); // Show modal
     
-            toggled_car_modal = true;
+            this.toggled_car_modal = true;
+            console.log("opened");
         }
         
     }
     async submitCar() {
         // Change button style
-        if (!submitting) {
-            submitting = true;
-            parseCar();
+        if (!this.submitting) {
+            this.submitting = true;
+            this.parseCar();
             var submitButton = $("#car-modal-submit");
             submitButton.addClass("car-modal-submit-loading");
             submitButton.html('Loading..');
@@ -72,11 +77,11 @@ class CarModal { //
                 submitButton.removeClass("car-modal-submit-loading");
                 submitButton.addClass("car-modal-submit-saved");
                 submitButton.html('Saved');
-                updateCar(this.current_car); // Update car from list
+                this.parent.components.carList.instance.updateCar(this.current_car); // Update car from list
                 await sleep(1000);
                 submitButton.removeClass("car-modal-submit-saved");
-    
             } catch(e) {
+                console.log(e);
                 submitButton.html('Error');
                 submitButton.removeClass("car-modal-submit-loading");
                 submitButton.addClass("car-modal-submit-error");
@@ -84,7 +89,7 @@ class CarModal { //
                 submitButton.removeClass("car-modal-submit-error");
             }
             submitButton.html('Submit');
-            submitting = false;
+            this.submitting = false;
         }
     }
 }

@@ -1,0 +1,14 @@
+.book-list {
+    display: flex;
+}
+.book-list > a {
+    margin: 20px;
+    width: 100%;
+    height: 200px;
+}
+.book-list-el {
+    background-position: center;
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+}
