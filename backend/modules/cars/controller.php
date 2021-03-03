@@ -1,8 +1,7 @@
-
 <?php
 
 class CarsController extends Controller {
-    public string $default = 'list'; // Default action
+    public string $default = 'search'; // Default action
 
     // public array $guest_actions = [
     //     'read',
@@ -19,28 +18,33 @@ class CarsController extends Controller {
     public function __construct() {
         parent::__construct(); 
     }
-    public function list_get() {
-        res($this->model->get_cars());
-    }
-    public function list_post() {
+    // public function list_get() {
+    //     res($this->model->get_cars());
+    // }
+    // public function list_post() {
         
-        $list = new CarList();
-        array_to_obj(Client::$data, $list);
-        $list->validate();
+    //     $list = new CarList();
+    //     array_to_obj(Client::$data, $list);
+    //     $list->validate();
 
-        $cars = $this->model->get_cars($list);
+    //     $cars = $this->model->get_cars($list);
 
-        $car_count = $this->model->get_car_count();
-        $pages = $car_count/$list->limit;
-        $pages += is_float($pages) ? 1 : 0;
-        $pages = intval($pages);
+    //     $car_count = $this->model->get_car_count();
+    //     $pages = $car_count/$list->limit;
+    //     $pages += is_float($pages) ? 1 : 0;
+    //     $pages = intval($pages);
 
-        res(array(
-            "cars" => $cars,
-            "pages" => $pages
-        ));
+    //     res(array(
+    //         "cars" => $cars,
+    //         "pages" => $pages
+    //     ));
         
+    // }
+    public function categories_get() {
+        //var_dump($this->model->get_categories());
+        res($this->model->get_categories());
     }
+
     public function search_post() {
         
         $search = new CarSearch();
@@ -54,8 +58,8 @@ class CarsController extends Controller {
         $pages = intval($pages);
 
         res(array(
-            "cars" => $cars,
-            "pages" => $pages
+            'cars' => $cars,
+            'pages' => $pages
         ));
         
     }
@@ -81,8 +85,7 @@ class CarsController extends Controller {
         $car = $this->model->get_car($car_id);
         if ($car) {
             $this->model->delete_car($car->id);
-            remove_file('public/img/cars/' . $car->id . '.jpg');
-            redirect('/cars/list/');
+            remove_file('../frontend/img/cars/' . $car->id . '.jpg');
         } else {
             notfound('The car ' . $car_id);
         }

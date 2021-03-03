@@ -6,7 +6,7 @@ const req = async function(method, url, data=null, json=true) {
 		mode: 'same-origin', // no-cors, *cors, same-origin
 		cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
 		credentials: 'same-origin', // include, *same-origin, omit
-		headers: { 'Content-Type': 'application/json' },
+		headers: json ? { 'Content-Type': 'application/json' } : {'Content-Type': '*/*'},
 		redirect: 'follow', // manual, *follow, error
 		referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
 		body: data ? JSON.stringify(data) : data // body data type must match "Content-Type" header
@@ -53,4 +53,14 @@ const sleep = function(ms) {
 
 const formatInteger = function (num) {
 	return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+}
+
+function b64encode(str) {
+	return window.btoa(unescape(encodeURIComponent(str))); // str -> base64
+}
+function b64encodeJson(obj) {
+	return window.btoa(unescape(encodeURIComponent(JSON.stringify(obj)))); // Obj -> json -> base64
+}
+function b64decodeJson(str) {
+	return JSON.parse(decodeURIComponent(escape(window.atob(str))));
 }

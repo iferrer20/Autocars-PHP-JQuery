@@ -1,0 +1,8 @@
+.footer {
+    width: 100%;
+    height: 70px;
+    background-color: rgb(39, 39, 39);
+}
+div[comp-key="footer"] {
+    margin-top: auto;
+}

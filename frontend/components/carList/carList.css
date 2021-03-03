@@ -1,14 +1,21 @@
+div[comp-key="carList"] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
 .car-list {
     display: flex;
     position: relative;
-    /* justify-content: center; */
+    justify-content: center; 
     max-height: 15000px;
     flex-wrap: wrap;
 }
 .img-car {
     height: 150px;
     background-position: center;
-    background-size: cover;
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 .car-list-pagination {
     width: 100%;
@@ -40,9 +47,11 @@
     color: white;
 }
 .car-el {
+    position: relative;
+    max-width: 400px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
     -moz-user-select: none;
     -webkit-user-select: none;
-    cursor: pointer;
     height: fit-content;
     box-sizing: border-box;
     padding: 20px;
@@ -51,7 +60,16 @@
 }
 
 .car-el > div {
+    cursor: pointer;
     width: 100%;
+    border-radius: 10px;
+    -webkit-box-shadow: 0px 0px 38px 2px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 38px 2px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 38px 2px rgba(0,0,0,0.75);
+    box-sizing: border-box;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
 }
 .car-update {
     
@@ -125,4 +143,67 @@
 
 .loader img {
     width: 280px;
+}
+.car-el-info {
+    box-sizing: border-box;
+    margin: 10px;
+}
+.car-el-info-name {
+    font-size: 15pt;
+    font-weight: bolder;
+}
+.car-el-info-price {
+    color: #ff3d3d;
+    font-size: 15pt;
+}
+.car-el-info-description {
+    font-size: 11pt;
+}
+
+.car-el-options {
+    border-radius: 50%;
+    align-self: flex-end;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.car-el-options:hover {
+    background-color: #b8b8b8;
+}
+
+.car-el-option-menu  {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    position: absolute;
+    width: 200px;
+    transition: height, 0.5s;
+    top: 60px;
+    right: 20px;
+    height: 0;
+    z-index: 7;
+    background-color: white;
+    margin-top: 10px;
+    border-radius: 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+    padding: 0px 20px 0px 20px;
+    -webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+}
+.car-el-option-menu-opened {
+    height: 120px;
+}
+.car-el-option-el {
+    font-size: 14pt;
+    padding: 10px;
+    border-radius: 15px;
+    transition: background-color 0.3s;
+}
+.car-el-option-el:hover {
+    background-color: #c8c8c8;
 }

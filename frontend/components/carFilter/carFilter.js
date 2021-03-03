@@ -3,14 +3,17 @@ class CarFilter {
 
     async searchCar() {
         let carList = this.parent.components.carList.instance;
-        await carList.searchCar({
-            "text": this.search_input.val(),
-            "min_price": this.min_price,
-            "max_price": this.max_price
-        });
+        carList.page = 1;
+        App.setArg("page", carList.page);
+        App.setArg("filters", b64encodeJson(this.filters));
+        await carList.searchCar();
         carList.createPagination();
     }
+    updateUrl() {
+        App.setArg();
+    }
     onSearchInput() {
+        this.filters.text = this.search_input.val();
         this.searchCar();
     }
     onClickFilterButton(el) {
@@ -19,10 +22,50 @@ class CarFilter {
         el.toggleClass("car-filter-button-modal");
         $(".shadow-white").toggleClass("shadow-white-enabled");
     }
+    onClickCategory(el) {
+        el.toggleClass("modal-el-selected");
+        let category = el.attr("value");
+        if (el.hasClass("modal-el-selected")) {
+            this.filters.categories.push(category);
+        } else {
+            this.filters.categories.splice(this.filters.categories.indexOf(category), 1);
+        }
+        this.searchCar();
+    }
+    onClickPublished(el) {
+        el.toggleClass("modal-el-selected");
+        $(".modal-published .modal-el-selected").each(function() {
+            if (!$(this).is(el)) {
+                $(this).removeClass("modal-el-selected");
+            }
+        });
+        let published = el.attr("value");
+        if (el.hasClass("modal-el-selected")) {
+            this.filters.published = published;
+        } else {
+            delete this.filters.published;
+        }
+        this.searchCar();
+    }
+    onClickOrder(el) {
+        el.toggleClass("modal-el-selected");
+        $(".modal-order .modal-el-selected").each(function() {
+            if (!$(this).is(el)) {
+                $(this).removeClass("modal-el-selected");
+            }
+        });
+        let order = el.attr("value"); 
+        if (el.hasClass("modal-el-selected")) {
+            this.filters.order = order;
+        } else {
+            delete this.filters.order;
+        }
+        this.searchCar();
+    }
 
     modalPriceEvents() {
         let self = this;
-        let input_range = this.obj.find(".car-filter-range");
+        let input_range = $(".car-filter-range");
 
         input_range.each(function() { // Set second radio to right
             let elements = $(this).find(".car-filter-range-radio");
@@ -37,14 +80,14 @@ class CarFilter {
             }
         });
 
-        let inputs = this.obj.find(".car-filter-modal-from-to").find("input");
+        let inputs = $(".car-filter-modal-from-to").find("input");
         let input_min = inputs.eq(0);
         let input_max = inputs.eq(1);
         input_min.val(input_range.attr("min"));
         input_max.val(input_range.attr("max"));
         
-        let radio_min = this.obj.find(".car-filter-range-radio-min");
-        let radio_max = this.obj.find(".car-filter-range-radio-max");
+        let radio_min = $(".car-filter-range-radio-min");
+        let radio_max = $(".car-filter-range-radio-max");
         let modal_el = input_range.parent();
         let input_range_pos = input_range.offset().left;
         let input_range_width = input_range.width()-20;
@@ -93,13 +136,13 @@ class CarFilter {
             input_range.attr(attr, value);
             input_min.val(input_range.attr("min-value"));
             input_max.val(input_range.attr("max-value"));
-            self.min_price = parseInt(input_min.val());
-            self.max_price = parseInt(input_max.val());
+            self.filters.min_price = parseInt(input_min.val());
+            self.filters.max_price = parseInt(input_max.val());
             el.css("transform",`translateX(${pos}px)`);
             
         }
 
-        this.obj.find(".car-filter-range-radio").mousedown(function(event) {
+        $(".car-filter-range-radio").mousedown(function(event) {
             let el = $(this);
             App.components.body.obj.on("mousemove.filter", function(event) {
                 let pos = event.pageX-input_range_pos-20;
@@ -115,11 +158,12 @@ class CarFilter {
 
     constructor() {
         let self = this;
-        this.search_input = this.obj.find(".car-filter-search");
+
+        this.search_input = $(".car-filter-search");
         this.search_input.on('input', function() {
             self.onSearchInput();
         });
-        this.obj.find(".car-filter-button").click(function() {
+        $(".car-filter-button").click(function() {
             self.onClickFilterButton($(this));
         });
 
@@ -131,7 +175,36 @@ class CarFilter {
         $(".car-filter-modal-cancel-button").click(function() {
             self.onClickFilterButton($(".car-filter-modal-opened").prev());
         });
+        $(".modal-category-el").click(function() {
+            self.onClickCategory($(this));
+        });
+        this.filters =  {};
+        this.filters.categories = [];
+        if (App.args.filters) {
+            this.filters = b64decodeJson(App.args.filters);
 
+            if (this.filters.categories.length > 0) {
+                this.filters.categories.map(category => {
+                    $(`.modal-category-el[value=${category}]`).addClass("modal-el-selected");
+                });
+            }
+            if (this.filters.text) {
+                this.search_input.val(this.filters.text);
+            }
+            if (this.filters.published) {
+                $(`.modal-published-el[value=${this.filters.published}]`).addClass("modal-el-selected");
+            }
+            if (this.filters.order) {
+                $(`.modal-order-el[value=${this.filters.order}]`).addClass("modal-el-selected");
+            }
+        }
+        
+        $(".modal-published-el").click(function() {
+            self.onClickPublished($(this));
+        });
+        $(".modal-order-el").click(function() {
+            self.onClickOrder($(this));
+        });
         
     }
 }

@@ -3,10 +3,10 @@
 class Header {
     constructor() {
         let self = this;
-        $(this.obj).find(".header-menu-lang-menu").children().click(function() {
+        $(".header-menu-lang-menu").children().click(function() {
             self.changeLang($(this));
         });
-        $(this.obj).find(".header-menu > div").click(function() {
+        $(".header-menu > div").click(function() {
             self.onClickMenuElement($(this));
         });
     }

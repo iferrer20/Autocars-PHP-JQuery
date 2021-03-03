@@ -25,7 +25,6 @@ div[comp-key="carFilter"] {
     margin: 20px;
 }
 
-
 .car-filter-range {
     position: relative;
     display: flex;
@@ -174,4 +173,49 @@ input::-webkit-inner-spin-button {
 .car-filter-modal-price-buttons {
     display: flex;
     align-self: flex-end;
+}
+
+.car-filter-modal.modal-category {
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.car-filter-modal.modal-category.car-filter-modal-opened {
+    height: 200px;
+    padding: 20px;
+}
+.modal-el-selected {
+    background-color: #d8d8d8;
+    cursor: pointer;
+}
+.modal-category-el, .modal-order-el, .modal-published-el {
+    user-select: none;
+    -moz-user-select: none;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 10px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    transition: background-color, 0.2s;
+}
+.modal-category-el:active, .modal-order-el:active, .modal-published-el:active {
+    background-color: #d8d8d8;
+}
+.car-filter-modal.modal-published {
+    width: 130%;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.car-filter-modal.modal-published.car-filter-modal-opened {
+    height: 170px;
+    padding: 20px;
+}
+.car-filter-modal.modal-order {
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.car-filter-modal.modal-order.car-filter-modal-opened {
+    height: 170px;
+    padding: 20px;
 }

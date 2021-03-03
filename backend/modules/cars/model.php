@@ -20,46 +20,92 @@ class CarsModel extends Model {
     
     }
     // READ
-    public function get_cars(CarList $list_params) : array {
-        $result = $this->db->query(
-            'SELECT * FROM cars ORDER BY id DESC LIMIT ? OFFSET ?',
-            'ii',
-            $list_params->limit, ($list_params->page-1)*$list_params->limit
-        );
-        // $cars = array();
-        // while ($row = $result->query->fetch_assoc()) {
-        //     $car = new Car();
-        //     array_to_obj($row, $car);
-        //     array_push($cars, $car);
-        // }
+    // public function get_cars(CarList $list_params) : array {
+    //     $result = $this->db->query(
+    //         'SELECT * FROM cars ORDER BY id DESC LIMIT ? OFFSET ?',
+    //         'ii',
+    //         $list_params->limit, ($list_params->page-1)*$list_params->limit
+    //     );
+    //     // $cars = array();
+    //     // while ($row = $result->query->fetch_assoc()) {
+    //     //     $car = new Car();
+    //     //     array_to_obj($row, $car);
+    //     //     array_push($cars, $car);
+    //     // }
 
-        return $result->query->fetch_all(MYSQLI_ASSOC);
-    }
+    //     return $result->query->fetch_all(MYSQLI_ASSOC);
+    // }
     public function get_car(int $id) {
+        $this->db->query( // views
+            'UPDATE cars SET views=views+1 WHERE id=?',
+            'i',
+            $id
+        );
+
         $result = $this->db->query(
-            'SELECT * FROM cars WHERE id=?',
+            'SELECT cars.id, description, cars.name, b.brand, km, price, at, cat.category FROM cars LEFT JOIN brands b ON b.id = cars.id LEFT JOIN car_category cc ON cars.id = cc.car_id LEFT JOIN categories cat ON cc.category_id = cat.id WHERE cars.id = ?',
             'i',
             $id
         );
         
-        if ($result->query->num_rows > 0) {
-            $car = new Car();
-            array_to_obj($result->query->fetch_assoc(), $car);
-            return $car;
-        } else {
-            return NULL;
-        }
-        
-        
+        return $result->query->fetch_all(MYSQLI_ASSOC)[0];
     } 
-    public function search_car(CarSearch $search) {
-        $categories = "category";
-        if (!empty($search->categories)) {
-            $categories = '\'' . join('\', \'', array_map("addslashes", $search->categories)) . '\'';
+    private function get_order_sql($order) {
+        switch ($order) {
+            default:
+            case 'recent':
+                $order = 'ORDER BY cars.at ASC';
+                break;
+            case 'old':
+                $order = 'ORDER BY cars.at DESC';
+                break;
+            case 'expensive':
+                $order = 'ORDER BY price DESC';
+                break;
+            case 'cheap':
+                $order = 'ORDER BY price ASC';
+                break;
+            case 'popular':
+                $order = 'ORDER BY views DESC';
+                break;
         }
+        return $order;
+    }
+    private function get_category_sql($cat) {
+        $categories = "category";
+        if (!empty($cat)) {
+            $categories = '\'' . join('\', \'', array_map("addslashes", $cat)) . '\'';
+        }
+        return $categories;
+    }
+    private function get_published_sql($published) {
+        switch ($published) {
+            default:
+            case 'anytime':
+                $published = '\'1990-01-01 00:00:00\'';
+                break;
+            case 'today':
+                $published = 'NOW() - INTERVAL 1 DAY';
+                break;
+            case 'week':
+                $published = 'NOW() - INTERVAL 1 WEEK';
+                break;
+            case 'month':
+                $published = 'NOW() - INTERVAL 1 MONTH';
+                break;
+            case 'year':
+                $published = 'NOW() - INTERVAL 1 YEAR';
+                break;
+        }
+        return $published;
+    }
+    public function search_car(CarSearch $search) {
+        $categories = $this->get_category_sql($search->categories);
+        $order = $this->get_order_sql($search->order);
+        $published = $this->get_published_sql($search->published);
 
         $result = $this->db->query(
-            "SELECT cars.id, description, cars.name, b.brand, km, price, at, cat.category FROM cars LEFT JOIN brands b ON b.id = cars.id LEFT JOIN car_category cc ON cars.id = cc.car_id LEFT JOIN categories cat ON cc.category_id = cat.id WHERE category IN ($categories) AND price BETWEEN ? AND ? AND km BETWEEN ? AND ? AND at > '1990-01-01 00:00:00' AND b.brand LIKE ? AND (cars.name LIKE CONCAT('%', ?, '%') OR cars.description LIKE CONCAT('%', ?, '%')) LIMIT ? OFFSET ?",
+            "SELECT cars.id, description, cars.name, b.brand, km, price, at, cat.category FROM cars LEFT JOIN brands b ON b.id = cars.id LEFT JOIN car_category cc ON cars.id = cc.car_id LEFT JOIN categories cat ON cc.category_id = cat.id WHERE category IN ($categories) AND price BETWEEN ? AND ? AND km BETWEEN ? AND ? AND b.brand LIKE ? AND (cars.name LIKE CONCAT('%', ?, '%') OR cars.description LIKE CONCAT('%', ?, '%')) AND at >= $published $order LIMIT ? OFFSET ?",
             'iiiisssii',
             $search->min_price, $search->max_price,
             $search->min_km, $search->max_km,
@@ -70,12 +116,10 @@ class CarsModel extends Model {
 
         return $result->query->fetch_all(MYSQLI_ASSOC);
     }
+    
     public function search_car_count(CarSearch $search) {
-        $categories = "category";
-        if (!empty($search->categories)) {
-            $categories = '\'' . join('\', \'', array_map("addslashes", $search->categories)) . '\'';
-        }
-
+        $categories = $this->get_category_sql($search->categories);
+        $published = $this->get_published_sql($search->published);
         $result = $this->db->query(
             "SELECT COUNT(cars.id) as car_count FROM cars LEFT JOIN brands b ON b.id = cars.id LEFT JOIN car_category cc ON cars.id = cc.car_id LEFT JOIN categories cat ON cc.category_id = cat.id WHERE category IN ($categories) AND price BETWEEN ? AND ? AND km BETWEEN ? AND ? AND at > '1990-01-01 00:00:00' AND b.brand LIKE ? AND (cars.name LIKE CONCAT('%', ?, '%') OR cars.description LIKE CONCAT('%', ?, '%'))",
             'iiiisss',
@@ -86,6 +130,19 @@ class CarsModel extends Model {
         );
 
         return $result->query->fetch_all(MYSQLI_ASSOC)[0]["car_count"];
+    }
+    public function get_categories() {
+        $result = $this->db->query(
+            "SELECT category FROM categories"
+        );
+        $result = $result->query->fetch_all(MYSQLI_NUM);
+        $ncat = count($result);
+        $categories = array();
+        for ($i=0;$i<$ncat; $i++) {
+            array_push($categories, $result[$i][0]);
+        }
+
+        return $categories;
     }
 
     // UPDATE

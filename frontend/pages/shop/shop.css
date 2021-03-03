@@ -1,9 +1,3 @@
-html {
-    height: 100%;
-}
-body {
-    height: 100%;
-}
 .shop {
     display: flex;
     flex-direction: column;

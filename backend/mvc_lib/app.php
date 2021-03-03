@@ -40,10 +40,10 @@ class App {
                     } 
                     
                 } else {
-                    $controller->action_notfound();
+                    notfound($uri[1]);
                 }
             } else {
-                notfound($uri[0] . ' not found');
+                notfound($uri[0]);
             }
             
             $controller->end(); // End with controller
@@ -54,4 +54,3 @@ class App {
     } 
 }
 ?>
-

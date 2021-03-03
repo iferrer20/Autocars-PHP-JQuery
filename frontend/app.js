@@ -87,9 +87,15 @@ App.renderView = function(jqElement, name) {
 App.href = function(path) {
     window.location.href = path;
 }
-
-App.uri = window.location.pathname.split("/").slice(1);
+App.uri = window.location.pathname.replace(/\/{2,}/g, "/").split("/").slice(1);
 App.args = {};
+
+App.setArg = function(key, value) {
+    App.args[key] = value;
+    let search = '?' + Object.keys(App.args).map(key => `${key}=${App.args[key]}`).join("&");
+    window.history.replaceState(null, '', window.location.pathname+search);
+}
+
 window.location.search.slice(1).split("&").map(e => e.split("=")).map(([key,value]) => { 
     if (key != 'undefined' && value != 'undefined') {
         value = decodeURI(value);
@@ -97,12 +103,16 @@ window.location.search.slice(1).split("&").map(e => e.split("=")).map(([key,valu
         App.args[key] = isNaN(value) ? value : parseFloat(value);
     }
 });
+App.scroll = function(x,y) {
+    window.scrollTo(x, y);
+}
 
 App.routing = {
     "" : {
         "name" : "home",
         "components" : [
             "header",
+            "footer",
             "carModal",
             "categories"
         ]
@@ -111,21 +121,30 @@ App.routing = {
         "name" : "shop",
         "components" : [
             "header",
+            "footer",
             "carFilter",
             "carList",
             "carModal"
-            
         ]
     },
     "account" : {
         "name" : "account",
         "components" : [
-            "header"
+            "header",
+            "footer"
         ]
     },
     "notfound" : {
         "name" : "notfound",
         "components" : []
+    },
+    "car" : {
+        "name" : "car",
+        "components" : [
+            "header",
+            "footer",
+            "carDetails"
+        ]
     }
 }
 

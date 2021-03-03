@@ -4,16 +4,16 @@ class CarList {
 
     toggleLoader() {
         if (this.toggled_loader) {
-            this.obj.find(".loader-carlist").addClass("loader-carlist-fadeout");
+            $(".loader-carlist").addClass("loader-carlist-fadeout");
         } else {
-            this.obj.find(".loader-carlist").html();
-            this.obj.find(".loader-carlist").remove();
-            this.obj.find(".car-list").append(`<div class="loader-carlist"><div class="loader"><img src="/img/carList/loading.gif" alt="#" /></div></div>`);
+            $(".loader-carlist").remove();
+            $(".car-list").append(`<div class="loader-carlist"><div class="loader"><img src="/img/carList/loading.gif" alt="#" /></div></div>`);
         }
         this.toggled_loader = !this.toggled_loader; 
     }
 
     async onPagination(el) {
+        App.scroll(0, 0);
         this.toggleLoader();
         // Change css class
         $(".car-list-pagination-el-selected").removeClass("car-list-pagination-el-selected");
@@ -22,71 +22,76 @@ class CarList {
         let page = parseInt(el.html());
         if (this.page != page) {
             this.page = page;
-            this.searchCar(); 
+            App.setArg("page", this.page);
+            this.searchCar();
         }
     
         //clearCars();
         //addCars((await getCars(page)).cars);
         this.toggleLoader();
     }
+
     createPagination() {
-        let pagination = this.obj.find(".car-list-pagination");
+        let pagination = $(".car-list-pagination");
         pagination.html('');
     
         for (let i=1; i<=this.pages; i++) {
             pagination.append(`<div class="car-list-pagination-el">${i}</div>`);
         }
-    
-        pagination.children().first().addClass("car-list-pagination-el-selected");
+
+        pagination.children().eq(this.page-1).addClass("car-list-pagination-el-selected");
 
         let self = this;
         $(".car-list-pagination-el").click(function() { 
             self.onPagination($(this));
         });
-
-    }
-    addCar(car) {
-        
-        list_el.prepend(`<p>${car.name}</p>`);
-        /*<i><img src="images/star.png"/></i>
-                    <i><img src="images/star.png"/></i>
-                    <i><img src="images/star.png"/></i>
-                    <i><img src="images/star.png"/></i>*/
-    
-        // Set Callbacks
-        // $(`#car-list [car-id=${car.id}]`).click(() => onClickCar(car));
-        // $(`#car-list [car-id=${car.id}] .car-update`).click(() => onClickUpdate(car));
-        // $(`#car-list [car-id=${car.id}] .car-delete`).click(() => onClickDelete(car));
     }
 
     renderCars() {
         this.clearCars();
 
-        let list_el = this.obj.find(".car-list");
+        let list_el = $(".car-list");
 
         this.cars.forEach((car) => {
-            list_el.prepend(`
-                <div class="car-el">
+            list_el.append(`
+                <div class="car-el" car-id="${car.id}">
                     <div>
-                        <div>${car.name}</div>
-                        <div>${car.description}</div>
-                        <div>${car.price}</div>
+                        <div class="car-el-options"><i class="gg-more-vertical-alt"></i></div>
+                        <div class="car-el-option-menu">
+                            <div class="car-el-option-el">Update</div>
+                            <div class="car-el-option-el">Delete</div>
+                        </div>
                         <div class="img-car" style="background-image: url('/img/cars/${car.id}.jpg');"></div>
+                        <div class="car-el-info">
+                            <div class="car-el-info-name">${car.name}</div>
+                            <div class="car-el-info-price">${formatInteger(car.price)} €</div>
+                            <div class="car-el-info-description">${car.description}</div>
+                        </div>
                     </div>
                 </div>`);
+        });
+
+        $(".car-el > div").click(function(e) {
+            if (e.target.className != "car-el-options" && e.target.className != "gg-more-vertical-alt" && e.target.className != "car-el-option-el" && e.target.className != "car-el-option-menu car-el-option-menu-opened") {
+                let car_id = $(this).parent().attr("car-id");
+                App.href(`/car/${car_id}/`);
+            } else {
+                $(this).find(".car-el-option-menu").toggleClass("car-el-option-menu-opened");
+            }
         });
         
     }
     clearCars() {
-        this.obj.find(".car-list .car-el").remove();
+        $(".car-list .car-el").remove();
     }
 
-    async searchCar(filters={}) {
+    async searchCar() {
+        let data = {...this.carFilter.filters};
         if (!this.toggled_loader) {
             this.toggleLoader();
         }
-        filters.page = this.page;
-        let { content } = await req("POST", "/api/cars/search/", filters);
+        data.page = this.page;
+        let { content } = await req("POST", "/api/cars/search/", data);
         
         this.cars = content.cars;
         this.pages = content.pages;
@@ -95,14 +100,19 @@ class CarList {
         if (this.toggled_loader) {
             this.toggleLoader();
         }
+        
     }
 
     constructor() {
         this.page = 1;
+        if (Number.isInteger(App.args.page)) {
+            this.page = App.args.page;
+        } 
         this.toggled_loader = false;
         
         let self = this;
-        this.searchCar().then(function() {
+        this.carFilter = this.parent.components.carFilter.instance;
+        this.searchCar(this.carFilter.filters).then(function() {
             self.createPagination();
         });
         

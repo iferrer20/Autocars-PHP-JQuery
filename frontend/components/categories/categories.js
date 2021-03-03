@@ -7,6 +7,6 @@ class Categories {
         });
     }
     onClickCategory(el) {
-        App.href(`/shop?category=${el.attr("value")}`);
+        App.href(`/shop?filters=${b64encodeJson({'categories': [el.attr("value")]})}`);
     }
 }
