@@ -13,8 +13,32 @@ class CarFilter {
         App.setArg();
     }
     onSearchInput() {
+        let self = this;
         this.filters.text = this.search_input.val();
         this.searchCar();
+        // AUTOCOMPLETE
+        if (this.filters.text.length == 0) {
+            $(".car-filter-autocomplete").html('');
+            $(".car-filter-autocomplete").css('display', 'none');
+            return;
+        }
+        $(".car-filter-autocomplete").css('display', 'block');
+        let autocomplete_strings = [];
+        for (let i=0; i<this.brands.length; i++) {
+            let brand = this.brands[i];
+            if (brand.search(this.filters.text) == 0) {
+                autocomplete_strings.push(brand);
+            }
+        }
+        $(".car-filter-autocomplete").html('');
+        autocomplete_strings.map(e => {
+            $(".car-filter-autocomplete").append(`<div class="car-filter-autocomplete-el">${e}</div>`)
+        });
+        $(".car-filter-autocomplete-el").click(function() {
+            self.search_input.val($(this).html());
+            self.filters.text = $(this).html();
+            self.searchCar();
+        });
     }
     onClickFilterButton(el) {
         el.find(".gg-chevron-down").toggleClass("gg-chevron-down-rotated");
@@ -62,7 +86,10 @@ class CarFilter {
         }
         this.searchCar();
     }
-
+    async getBrands() {
+        let { content } = await req("GET","/api/cars/brands/");
+        this.brands = content.map(e => e.toLowerCase());
+    }
     modalPriceEvents() {
         let self = this;
         let input_range = $(".car-filter-range");
@@ -205,6 +232,7 @@ class CarFilter {
         $(".modal-order-el").click(function() {
             self.onClickOrder($(this));
         });
+        this.getBrands();
         
     }
 }

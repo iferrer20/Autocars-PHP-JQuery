@@ -44,6 +44,9 @@ class CarsController extends Controller {
         //var_dump($this->model->get_categories());
         res($this->model->get_categories());
     }
+    public function brands_get() {
+        res($this->model->get_brands());
+    }
 
     public function search_post() {
         

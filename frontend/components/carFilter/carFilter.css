@@ -9,6 +9,7 @@ div[comp-key="carFilter"] {
     box-sizing: border-box;
     display: flex;
     align-items: center;
+    position: relative;
 }
 .car-filter > div {
     position: relative;
@@ -218,4 +219,28 @@ input::-webkit-inner-spin-button {
 .car-filter-modal.modal-order.car-filter-modal-opened {
     height: 170px;
     padding: 20px;
+}
+.car-filter-autocomplete {
+    border-radius: 20px;
+    position: absolute !important;
+    width: 217px;
+    top: 70px;
+    left: 30px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-color: white;
+    padding: 10px;
+    box-sizing: border-box;
+    -webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.75);
+    display: none;
+    z-index: 15;
+}
+.car-filter-autocomplete-el {
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.car-filter-autocomplete-el:hover {
+    background-color: #afafaf;
 }

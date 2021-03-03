@@ -35,6 +35,19 @@ class CarsModel extends Model {
 
     //     return $result->query->fetch_all(MYSQLI_ASSOC);
     // }
+    public function get_brands() {
+        $result = $this->db->query(
+            "SELECT brand FROM brands"
+        );
+        $result = $result->query->fetch_all(MYSQLI_NUM);
+        $nbrands = count($result);
+        $brands = array();
+        for ($i=0;$i<$nbrands; $i++) {
+            array_push($brands, $result[$i][0]);
+        }
+
+        return $brands;
+    }
     public function get_car(int $id) {
         $this->db->query( // views
             'UPDATE cars SET views=views+1 WHERE id=?',
