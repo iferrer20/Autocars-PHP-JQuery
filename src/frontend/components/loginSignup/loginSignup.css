@@ -1,0 +1,120 @@
+div[comp-key="loginSignup"] {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.buttons {
+    display: flex;
+    width: 100%;
+    height: 40px;
+    cursor: pointer;
+}
+
+.buttons-signup {
+    border-radius: 0px 10px 0px 0px;
+}
+.buttons-login {
+    border-radius: 10px 0px 0px 0px;
+}
+
+.login-signup > .tab {
+    height: 150px;
+    background-color: white;
+    z-index: -1;
+    opacity: 0;
+}
+.login.enabled > body {
+    background-color: red;
+}
+
+.tab.enabled {
+    display: flex;
+    z-index: 1;
+    opacity: 1;
+}
+
+.buttons > .enabled {
+    background-color: white;
+}
+
+.buttons > div {
+   text-align: center;
+   font-family: Verdana, Arial;
+   flex: 50%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   height: 100%;
+   background-color: #EEEEEE;
+}
+
+.login-signup {
+    -webkit-box-shadow: 0px 0px 27px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 27px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 27px 0px rgba(0,0,0,0.75);
+    border-radius: 10px;
+    padding: 0px 0px 20px 0px;
+    box-sizing: border-box;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    transition: height, 0.5s;
+}
+
+.login {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 150px;
+    width: 80%;
+    top: 50px;
+}
+
+.login-button {
+    }
+
+.login > * {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.signup {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    height: 150px;
+    width: 80%;
+}
+.tab.signup {
+    height: 200px;
+}
+.tab {
+    margin-top: 20px;
+}
+
+.login-signup input {
+    border: none;
+    border-bottom: 1px solid ;
+    padding: 5px;
+    background-color: white;
+    outline: none;
+}
+
+.login-signup-button {
+    cursor: pointer;
+    padding: 5px;
+    background-color: #4bd660;
+    text-align: center;
+    border-radius: 5px;
+    font-family: Verdana, Arial, sans-serif;
+    font-weight: bold;
+    color: white;
+    width: 100%;
+    box-sizing: border-box;
+
+}

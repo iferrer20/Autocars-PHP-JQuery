@@ -1,6 +1,8 @@
-html/phpmyadmin
-html/
-frontend/images/
-frontend/icon/
-phpmyadmin/
-frontend/img/
+src/html/phpmyadmin
+src/html/
+src/frontend/images/
+src/frontend/icon/
+src/phpmyadmin/
+src/frontend/img/
+data/db/*
+!data/db/.gitkeep
