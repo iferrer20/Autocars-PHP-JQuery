@@ -9,7 +9,6 @@ function array_to_obj(array $array, object $obj, bool $prevent_xss = false) { //
             try {
                 $obj->{$key} = $value;
             } catch(TypeError $e) {
-                continue;
             }
             
         }
@@ -62,8 +61,8 @@ function notfound($str) {
     global $res;
     $res = true;
 }
-function error($str) {
-    http_response_code(400);
+function error($str, $code = 400) {
+    http_response_code($code);
     echo json_encode(array(
         'success' => false,
         'error' => $str

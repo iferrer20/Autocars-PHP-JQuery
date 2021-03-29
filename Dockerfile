@@ -5,20 +5,20 @@ ENV DEBIAN_FRONTEND noninteractive
 # MYSQL INSTALLATION
 RUN apt-get update && \
    apt-get install -y --no-install-recommends gnupg dirmngr; \
-   apt-get install -y --no-install-recommends ca-certificates wget; \
-   key='A4A9406876FCBD3C456770C88C718D3B5072E1F5'; \
-        gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
-        gpg --batch --export "$key" > /etc/apt/trusted.gpg.d/mysql.gpg; \
-    gpgconf --kill all; \
-    echo 'deb http://repo.mysql.com/apt/debian/ buster mysql-8.0' > /etc/apt/sources.list.d/mysql.list; \
-    { \
-                echo mysql-community-server mysql-community-server/data-dir select ''; \
-                echo mysql-community-server mysql-community-server/root-pass password 'iferrer ??'; \
-                echo mysql-community-server mysql-community-server/re-root-pass password 'iferrer ??'; \
-                echo mysql-community-server mysql-community-server/remove-test-db select false; \
-        } | debconf-set-selections; \
-    apt-get update && \
-    apt-get install -y mysql-server;
+   apt-get install -y --no-install-recommends ca-certificates wget;
+#   key='A4A9406876FCBD3C456770C88C718D3B5072E1F5'; \
+#        gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
+#        gpg --batch --export "$key" > /etc/apt/trusted.gpg.d/mysql.gpg; \
+#    gpgconf --kill all; \
+#    echo 'deb http://repo.mysql.com/apt/debian/ buster mysql-8.0' > /etc/apt/sources.list.d/mysql.list; \
+#    { \
+#                echo mysql-community-server mysql-community-server/data-dir select ''; \
+#                echo mysql-community-server mysql-community-server/root-pass password 'iferrer ??'; \
+#                echo mysql-community-server mysql-community-server/re-root-pass password 'iferrer ??'; \
+#                echo mysql-community-server mysql-community-server/remove-test-db select false; \
+#        } | debconf-set-selections; \
+#    apt-get update && \
+#    apt-get install -y mysql-server;
 
 # PHP 8 INSTALLATION 
 RUN echo "deb https://packages.sury.org/php/ buster main" | tee /etc/apt/sources.list.d/sury-php.list && \

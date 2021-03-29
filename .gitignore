@@ -6,3 +6,5 @@ src/phpmyadmin/
 src/frontend/img/
 data/db/*
 !data/db/.gitkeep
+Ivan_Ferrer_Alcaraz_ss03.sh
+triggers.sql

@@ -14,3 +14,9 @@ En este proyecto uso mi propio framework de frontend y backend, con un codigo lo
 * Buscar coche (texto)
 * Autocompletado en las búsquedas
 * Uso de google book api
+
+### Docker
+Para iniciar los contenedores
+```console
+docker-compose up
+```

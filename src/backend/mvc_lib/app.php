@@ -4,12 +4,10 @@ class App {
     public function __construct() {
         global $res;
 
+        // uri = /api/cars/search -> ['cars','search_post']
+
         $uri = array_key_exists('uri', $_GET) ? htmlentities(str_replace("/api/", "", $_GET['uri'])) : 'cars/list';  // Prevent xss
         $uri = explode('/', rtrim($uri, '/'));  // Split uri by 
-
-        $notfound_controller = 'modules/notfound/controller.php';
-        $error_controller = 'modules/error/controller.php';
-        require_once $notfound_controller;
 
         $file_controller = 'modules/' . $uri[0] . '/controller.php';
         if (file_exists($file_controller)) { 
@@ -18,8 +16,7 @@ class App {
             $controller = new $class_cl_name;
             $method = get_method();
             
-            if (isset($uri[1]) || property_exists($controller, 'default')) {
-                $uri[1] = isset($uri[1]) ? $uri[1] : $controller->default;
+            if (isset($uri[1])) {
                 $uri[1] .= '_' . strtolower(get_method());
 
                 if (method_exists($controller, $uri[1])) {

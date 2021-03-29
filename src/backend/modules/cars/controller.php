@@ -1,20 +1,7 @@
 <?php
 
 class CarsController extends Controller {
-    public string $default = 'search'; // Default action
 
-    // public array $guest_actions = [
-    //     'read',
-    //     'list'
-    // ];
-    // public array $admin_actions = [
-    //     '*'
-    // ];
-    // public array $user_actions = [
-    //     'read',
-    //     'list'
-    // ];
-    
     public function __construct() {
         parent::__construct(); 
     }
