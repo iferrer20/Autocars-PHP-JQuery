@@ -1,6 +1,7 @@
 <?php
 
 class App {
+
     public function __construct() {
         global $res;
 
@@ -9,45 +10,62 @@ class App {
         $uri = array_key_exists('uri', $_GET) ? htmlentities(str_replace("/api/", "", $_GET['uri'])) : 'cars/list';  // Prevent xss
         $uri = explode('/', rtrim($uri, '/'));  // Split uri by 
 
-        $file_controller = 'modules/' . $uri[0] . '/controller.php';
+        $this->uri = $uri;
+
+        $controller_name = $uri[0] ?? NULL;
+        $action_name = $uri[1] ?? NULL;
+
+        if ($controller = $this->load_controller($controller_name)) {
+            if ($func = $this->load_action($controller, $action_name)) {
+                $this->call_middlewares($controller, $func);
+                $controller->{$func}();
+            } else {
+                notfound($action_name);
+            }
+        } else {
+            notfound($controller_name);
+        }        
+    } 
+
+    private function load_controller($module_name) {
+        $file_controller = 'modules/' . $module_name . '/controller.php';
         if (file_exists($file_controller)) { 
             require_once $file_controller;
-            $class_cl_name = $uri[0] . 'Controller';
+            $class_cl_name = $module_name . 'Controller';
             $controller = new $class_cl_name;
-            $method = get_method();
-            
-            if (isset($uri[1])) {
-                $uri[1] .= '_' . strtolower(get_method());
+            return $controller;
+            // $controller->end(); // End with controller
 
-                if (method_exists($controller, $uri[1])) {
-                    try {
-                        // Midlewares
-                        Client::$data = get_json_data();
-                        Client::$ip_addr = get_ipaddr();
-                        Client::$uri = $uri;
+        } 
+    }
 
-                        $controller->{$uri[1]}();
-                        if (!$res) { // If controller haven't responsed, respond with 200 OK
-                            ok();
+    private function load_action($controller, $action_name) {
+        $function_name = $action_name . '_' . strtolower(get_method());
+        if (method_exists($controller, $function_name)) {
+            return $function_name;
+        } 
+    }
+
+    private function call_middlewares($controller, $func) {
+
+        $reflection_class = new ReflectionClass(get_class($controller));
+        $reflection_method = new ReflectionMethod(get_class($controller), $func);
+        $attributes = array_merge(
+            $reflection_method->getAttributes(), 
+            $reflection_class->getAttributes()
+        );
+
+        foreach ($attributes as $attribute) {
+            switch ($attribute->getName()) {
+                case 'middlewares':
+                    foreach ($attribute->getArguments() as $argument) {
+                        if (method_exists('Middlewares', $argument)) {
+                            Middlewares::{$argument}();
                         }
-                    } catch (BadReqException $e) {
-                        error($e->getMessage());
-                    } catch (Exception $e) {
-                        sys_error($e);
-                    } 
-                    
-                } else {
-                    notfound($uri[1]);
-                }
-            } else {
-                notfound($uri[0]);
+                    }
+                    break;
             }
-            
-            $controller->end(); // End with controller
-
-        } else {
-            notfound($uri[0]);
         }
-    } 
+    }
 }
 ?>

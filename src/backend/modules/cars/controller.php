@@ -34,7 +34,7 @@ class CarsController extends Controller {
     public function brands_get() {
         res($this->model->get_brands());
     }
-
+    #[middlewares('foo', 'bar'), tonto]
     public function search_post() {
         
         $search = new CarSearch();
