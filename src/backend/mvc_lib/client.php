@@ -1,9 +1,9 @@
 <?php
 
 class Client {
-    static array $data;
-    static array $uri;
-    static string $ip_addr;
+    static array $data = array();
+    static array $uri = array();
+    static string $ip_addr = "";
 }
 
 

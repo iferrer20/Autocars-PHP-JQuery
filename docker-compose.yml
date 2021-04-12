@@ -5,8 +5,9 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./src/:/var/www/html/:ro
+      - ./src/:/var/www/html/src:ro
       - ./config/nginx-autocars.conf:/etc/nginx/sites-available/default:ro
+      - ./data/img/:/var/www/html/img/:rw
   db:
     image: mysql:5.7
     container_name: db

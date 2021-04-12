@@ -34,13 +34,8 @@ class CarsController extends Controller {
     public function brands_get() {
         res($this->model->get_brands());
     }
-    #[middlewares('foo', 'bar'), tonto]
-    public function search_post() {
-        
-        $search = new CarSearch();
-        array_to_obj(Client::$data, $search);
-        $search->validate();
-
+    #[middlewares('foo', 'bar')]
+    public function search_post(CarSearch $search) {
         $cars = $this->model->search_car($search);
         $car_count = $this->model->search_car_count($search);
         $pages = $car_count/$search->limit;
@@ -51,15 +46,6 @@ class CarsController extends Controller {
             'cars' => $cars,
             'pages' => $pages
         ));
-        
-    }
-    public function read_get() {
-        $car = $this->model->get_car(Client::$uri[2]);
-        if ($car) {
-            res($car);
-        } else {
-            notfound('Car ' . Client::$uri[2]);
-        }
     }
     public function create_post() {
         $car = new Car();
@@ -70,22 +56,16 @@ class CarsController extends Controller {
 
         save_image('img', 'public/img/cars/' . $id . '.jpg');
     }
-    public function delete_post() {
-        $car_id = Client::$data["id"];
-        $car = $this->model->get_car($car_id);
+    public function delete_post(int $id) {
+        $car = $this->model->get_car($id);
         if ($car) {
             $this->model->delete_car($car["id"]);
-            remove_file('../frontend/img/cars/' . $car["id"] . '.jpg');
+            remove_file('/var/www/html/img/cars/' . $car["id"] . '.jpg');
         } else {
-            notfound('The car ' . $car_id);
+            notfound('The car ' . $id);
         }
-        
     }
-    public function update_post() {
-        $car = new Car();
-        array_to_obj(Client::$data, $car);
-
-        $car->validate();
+    public function update_post(Car $car) {
         $this->model->update_car($car);
         if (is_image('img')) {
             $filepath = 'public/img/cars/' . $car->id . '.jpg';

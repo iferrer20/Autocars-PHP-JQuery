@@ -6,9 +6,8 @@ class App {
         global $res;
 
         // uri = /api/cars/search -> ['cars','search_post']
-
-        $uri = array_key_exists('uri', $_GET) ? htmlentities(str_replace("/api/", "", $_GET['uri'])) : 'cars/list';  // Prevent xss
-        $uri = explode('/', rtrim($uri, '/'));  // Split uri by 
+        $uri = htmlentities(str_replace("/api/", "", $_GET['uri']));  // Prevent xss
+        $uri = explode('/', rtrim($uri, '/'));  // Split uri 
 
         $this->uri = $uri;
 
@@ -16,9 +15,10 @@ class App {
         $action_name = $uri[1] ?? NULL;
 
         if ($controller = $this->load_controller($controller_name)) {
-            if ($func = $this->load_action($controller, $action_name)) {
-                $this->call_middlewares($controller, $func);
-                $controller->{$func}();
+            if ($action_func = $this->load_action($controller, $action_name)) {
+                $this->call_middlewares($controller, $action_func);
+                $this->call_action($controller, $action_func);
+
             } else {
                 notfound($action_name);
             }
@@ -34,8 +34,6 @@ class App {
             $class_cl_name = $module_name . 'Controller';
             $controller = new $class_cl_name;
             return $controller;
-            // $controller->end(); // End with controller
-
         } 
     }
 
@@ -46,15 +44,51 @@ class App {
         } 
     }
 
-    private function call_middlewares($controller, $func) {
+    private function call_action($controller, $func) {
+        $reflection_method = new ReflectionMethod(get_class($controller), $func);
+        $reflection_params = $reflection_method->getParameters();
+        
+        $params = array();
+        $r_param_count = count($reflection_params);
 
+        foreach ($reflection_params as $param) { // get parameters of action
+            $param_name = $param->getName();
+            $param_class = $param->getType()->getName();
+            if ($is_class = class_exists($param_class)) {
+                $obj = new $param_class();
+            }
+            
+            //if (!array_key_exists($param_name, Client::$data)) {
+            //    throw new BadReqException('Insuficient data');
+            //}
+            
+            if ($is_class) {
+                array_to_obj($r_param_count > 1 ? Client::$data[$param_name] : Client::$data, $obj, true);
+                if (method_exists($obj, "validate")) {
+                    $obj->validate();
+                }
+            } else {
+                $obj = Client::$data[$param_name];
+            }
+            array_push($params, $obj);
+        }
+        $reflection_method->invokeArgs($controller, $params); // Call action
+        //$controller->{$func}();
+    }
+
+    private function call_middlewares($controller, $func) {
         $reflection_class = new ReflectionClass(get_class($controller));
         $reflection_method = new ReflectionMethod(get_class($controller), $func);
         $attributes = array_merge(
             $reflection_method->getAttributes(), 
             $reflection_class->getAttributes()
         );
+        $params = $reflection_method->getParameters();
 
+        // Call default middleware
+        Middlewares::default($controller);
+
+        // Call to middlewares
         foreach ($attributes as $attribute) {
             switch ($attribute->getName()) {
                 case 'middlewares':
