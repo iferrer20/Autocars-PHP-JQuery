@@ -6,31 +6,39 @@ class App {
         global $res;
 
         // uri = /api/cars/search -> ['cars','search_post']
-        $uri = htmlentities(str_replace("/api/", "", $_GET['uri']));  // Prevent xss
+        $uri = htmlentities(str_replace("/api/", "", $_GET['uri'])); // Prevent xss
         $uri = explode('/', rtrim($uri, '/'));  // Split uri 
 
         $this->uri = $uri;
 
-        $controller_name = $uri[0] ?? NULL;
-        $action_name = $uri[1] ?? NULL;
+        $controller_name = $uri[0] ?? '';
+        $action_name = $uri[1] ?? '';
 
         if ($controller = $this->load_controller($controller_name)) {
             if ($action_func = $this->load_action($controller, $action_name)) {
-                $this->call_middlewares($controller, $action_func);
-                $this->call_action($controller, $action_func);
-
+                try {
+                    $this->call_middlewares($controller, $action_func);
+                    $this->call_action($controller, $action_func);
+                    if (!$res) {
+                        ok();
+                    }
+                } catch(BadReqException $e) {
+                    error($e->getMessage());
+                } catch(Exception $e) {
+                    sys_error($e);
+                }
             } else {
                 notfound($action_name);
             }
         } else {
             notfound($controller_name);
-        }        
+        }
     } 
 
     private function load_controller($module_name) {
         $file_controller = 'modules/' . $module_name . '/controller.php';
         if (file_exists($file_controller)) { 
-            require_once $file_controller;
+                require_once $file_controller;
             $class_cl_name = $module_name . 'Controller';
             $controller = new $class_cl_name;
             return $controller;
@@ -61,7 +69,7 @@ class App {
             //if (!array_key_exists($param_name, Client::$data)) {
             //    throw new BadReqException('Insuficient data');
             //}
-            
+
             if ($is_class) {
                 array_to_obj($r_param_count > 1 ? Client::$data[$param_name] : Client::$data, $obj, true);
                 if (method_exists($obj, "validate")) {

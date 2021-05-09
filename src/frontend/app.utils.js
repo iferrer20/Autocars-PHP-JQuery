@@ -37,7 +37,7 @@ const loadSource = async function(el) {
                     resolve();
                 }
             };
-        } else {  //Others
+        } else {  //Other
             el.onload = function() {
                 resolve();
             };

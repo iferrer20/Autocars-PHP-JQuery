@@ -14,6 +14,23 @@ class UserModel extends Model {
         ); 
         $user->id = $result->insert_id;
     }
+    public function signin(User $user) {
+        $result = $this->db->query(
+            'CALL userSignin(?, ?)',
+            'ss',
+            $user->email,
+            $user->password
+        );
+    }
+    public function signup(User $user) {
+        $result = $this->db->query(
+            'CALL userSignup(?, ?, ?)',
+            'sss',
+            $user->email,
+            $user->username,
+            $user->password
+        );
+    }
     public function get_user(User $user) {
         $result = $this->db->query(
             'SELECT * FROM users WHERE email=? OR user_id=?',

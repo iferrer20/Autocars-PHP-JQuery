@@ -2,9 +2,6 @@
 
 class CarsController extends Controller {
 
-    public function __construct() {
-        parent::__construct(); 
-    }
     // public function list_get() {
     //     res($this->model->get_cars());
     // }
@@ -34,7 +31,7 @@ class CarsController extends Controller {
     public function brands_get() {
         res($this->model->get_brands());
     }
-    #[middlewares('foo', 'bar')]
+    #[middlewares('foo', 'bar', 'test'), test('')]
     public function search_post(CarSearch $search) {
         $cars = $this->model->search_car($search);
         $car_count = $this->model->search_car_count($search);
@@ -73,11 +70,11 @@ class CarsController extends Controller {
             save_image('img', $filepath);
         }
     }
-    public function truncate_post() {
+    /*public function truncate_post() {
         if ($_POST['confirm'] == 'true') {
             $this->model->trucate_cars_table();
         }
-    }
+    }*/
 }
 
 ?>

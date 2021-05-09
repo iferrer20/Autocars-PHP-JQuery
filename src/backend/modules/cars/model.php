@@ -1,9 +1,6 @@
 <?php
 
 class CarsModel extends Model {
-    public function __construct() {
-        parent::__construct();
-    }
     // CREATE
     public function insert_car(Car $car) : int {
         //$query = $this->db->conn->prepare("INSERT INTO cars (name, description, price) VALUES (?, ?, ?)");

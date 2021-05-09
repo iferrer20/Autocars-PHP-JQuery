@@ -2,10 +2,12 @@ FROM debian:buster
 
 ENV DEBIAN_FRONTEND noninteractive
 
+RUN echo "nameserver 8.8.8.8" > /etc/resolv.conf
+
 # MYSQL INSTALLATION
 RUN apt-get update && \
-   apt-get install -y --no-install-recommends gnupg dirmngr; \
-   apt-get install -y --no-install-recommends ca-certificates wget;
+   apt-get install -y --no-install-recommends gnupg dirmngr && \
+   apt-get install -y --no-install-recommends ca-certificates wget
 #   key='A4A9406876FCBD3C456770C88C718D3B5072E1F5'; \
 #        gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
 #        gpg --batch --export "$key" > /etc/apt/trusted.gpg.d/mysql.gpg; \

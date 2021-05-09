@@ -1,17 +1,17 @@
 <?php
 
-class Car {
-    public int $id;
+class Car extends ORMType {
+    public string $table = 'cars';
+    #[primary, no_insert]
+    public int $id = 105;
     public int $price = 1000;
     public string $name = '';
     public string $description = '';
-    public string $brand;
-    public string $category;
-    public int $km;
-    public string $at;
-
-    public function __construct () {
-    }
+    public int $brand = 1;
+    public string $category = '';
+    public int $km = 0;
+    public int $views = 0;
+    public string $at = '';
 
     public function validate() {
 

@@ -1,12 +1,16 @@
 <?php
 
 class Database {
+    public static mysqli $static_conn;
     public mysqli $conn;
 
     public function connect() {
-        $this->conn = new mysqli("172.17.0.1", "root", "", "autocars");
+        if (!isset(Database::$static_conn)) {
+            Database::$static_conn = new mysqli("172.17.0.1", "root", "", "autocars");
+        }
+        $this->conn = Database::$static_conn;
         if (!$this->conn) {
-            die('Error connecting to db ' . mysqli_connect_errno() . '<br>Please contact with the owner');
+            error('Error connecting to db ' . mysqli_connect_errno() . '<br>Please contact with the owner');
         }
     }
     public function close() {
@@ -16,6 +20,7 @@ class Database {
     public function __construct() {
         $this->connect();
     }
+
     public function query(string $query_str, string $types = '', ...$values) {
         if (count($values) == 0 || $types == '') {
             $query = $this->conn->query($query_str);
@@ -29,7 +34,6 @@ class Database {
                 $result->query = $query;
                 return $result;
             }
-            
         } else {
             $stmt = $this->conn->prepare($query_str);
             if (!$stmt) {
@@ -37,7 +41,11 @@ class Database {
             }
             $stmt->bind_param($types, ...$values);
             if (!$stmt->execute()) {
-                throw new Exception('Error executing query');
+                if ($stmt->sqlstate == 45000) {
+                    throw new BadReqException($stmt->error);
+                } else { 
+                    throw new Exception('Error executing query: ' . $stmt->error);
+                }
             }
             $result = (object) [];
             $result->insert_id = $stmt->insert_id;

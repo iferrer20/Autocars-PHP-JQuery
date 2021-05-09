@@ -91,7 +91,7 @@ div[comp-key="loginSignup"] {
     width: 80%;
 }
 .tab.signup {
-    height: 200px;
+    height: 230px;
 }
 .tab {
     margin-top: 20px;
@@ -117,4 +117,11 @@ div[comp-key="loginSignup"] {
     width: 100%;
     box-sizing: border-box;
 
+}
+
+.login-google {
+    width: 200px;
+    height: 50px;
+    background-color: black;
+    
 }

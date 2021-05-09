@@ -9,3 +9,4 @@ data/db/*
 triggers.sql
 data/img/*
 !data/img/.gitkeep
+src/frontend-angular/

@@ -17,6 +17,9 @@ services:
       - "3306:3306"
     volumes:
       - ./data/db:/var/lib/mysql
+
+
+        
 #volumes:
 #  dbdata:
 #   driver: local
